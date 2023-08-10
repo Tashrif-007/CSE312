@@ -1,54 +1,85 @@
-#include <stdio.h>
+#include <iostream>
+using namespace std;
 #define mx 100
 
-int transit[mx][mx][mx];
-int maxS, isAccepted = 0;
+char transit[mx][mx][mx];
+int maxS;
+int numState, numAlpha;
+string path;
+bool isAccepted = false;
 
-void exploreStates(char current_state, char end_state, char alpha[], char str[], int numAlpha, int transitionIdx, int strIdx) {
-    if (transitionIdx >= maxS || isAccepted) {
-        return;
-    }
+void nfaSim(char states[], char alpha[], char curr, char ending, string str, int idx, string currentPath)
+{
 
-    char next_state = transit[current_state - 'a'][alpha[strIdx]][transitionIdx]; 
-
-    if (str[strIdx] == '\0') {
-        if (next_state == end_state) {
-            isAccepted = 1; 
+    if (str[idx] == NULL)
+    {
+        if (curr == ending)
+        {
+            isAccepted = true;
+            path = currentPath;
             return;
         }
-    } else if (next_state != 'q') {
-        exploreStates(next_state, end_state, alpha, str, numAlpha, 0, strIdx + 1);
-        exploreStates(current_state, end_state, alpha, str, numAlpha, transitionIdx + 1, strIdx);
+        else
+            return;
+    }
+
+    int i, j, k;
+
+    for (i = 0; i < numState; i++)
+    {
+        if (curr == states[i])
+            break;
+    }
+    for (j = 0; j < numAlpha; j++)
+    {
+        if (str[idx] == alpha[j])
+            break;
+    }
+
+    for (k = 0; transit[i][j][k]; k++)
+    {
+        nfaSim(states, alpha, transit[i][j][k], ending, str, idx + 1, currentPath +" "+ transit[i][j][k]);
     }
 }
 
-int main() {
-    char states[mx], start, end, str[mx];
-    int numState, numAlpha,alpha[mx];
+int main()
+{
+    freopen("nfa.txt", "r", stdin);
+    char start, ending;
+    string str;
+
+    int i, j, k;
 
     printf("Enter number of states: ");
     scanf("%d", &numState);
 
+    char states[numState];
     printf("Enter states: ");
-    for (int i = 0; i < numState; i++)
+    for (i = 0; i < numState; i++)
         scanf(" %c", &states[i]);
 
     printf("Enter number of alphabets: ");
     scanf("%d", &numAlpha);
 
+    char alpha[numAlpha];
+
     printf("Enter alphabets: ");
-    for (int i = 0; i < numAlpha; i++)
+    for (i = 0; i < numAlpha; i++)
         scanf(" %c", &alpha[i]);
     printf("Enter maximum number of transitions from a state: ");
     scanf("%d", &maxS);
 
-    for (int i = 0; i < numState; i++) {
+    for (i = 0; i < numState; i++)
+    {
         printf("Enter transitions for state %c:\n", states[i]);
-        for (int j = 0; j < numAlpha; j++) {
+        for (j = 0; j < numAlpha; j++)
+        {
             printf("Enter transitions for alphabet %c:\n", alpha[j]);
-            for (int k = 0; k < maxS; k++) {
-                scanf(" %c", &transit[states[i] - 'a'][alpha[j]][k]);
+            for (k = 0; k < maxS; k++)
+            {
+                scanf(" %c", &transit[i][j][k]);
             }
+            transit[i][j][k] = NULL;
         }
     }
 
@@ -56,18 +87,17 @@ int main() {
     scanf(" %c", &start);
 
     printf("Enter end state: ");
-    scanf(" %c", &end);
+    scanf(" %c", &ending);
 
     printf("Enter string: ");
-    scanf("%s", str);
+    cin >> str;
 
-    exploreStates(start, end, alpha, str, numAlpha, 0, 0);
+    nfaSim(states, alpha, start, ending, str, 0, path);
 
-    if (isAccepted) {
-        printf("Accepted\n");
-    } else {
-        printf("Not accepted\n");
-    }
+    if (isAccepted)
+        cout << "Accepted\nPath: " << path << endl;
+    else
+        cout << "Rejected\n";
 
     return 0;
 }
