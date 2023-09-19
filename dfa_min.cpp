@@ -67,7 +67,7 @@ int main()
         }
     }
 
-    for (int f = 0;  f<numState; f++)
+    for (int f = 0; f < numState; f++)
     {
         for (i = 0; i < numState; i++)
         {
@@ -115,38 +115,52 @@ int main()
         cout << endl;
     }
 
-    //setting up the new minimized states
-    vector<set<char>>newState;
-    for(i=0; i<numState; i++)
+   
+    vector<set<char>> newState;
+    vector<bool>checked(numState, false);
+
+for (i = 0; i < numState; i++)
+{
+    for (j = 0; j < numState; j++)
     {
-        for(j=0; j<numState; j++)
+        if (equiv[i][j] == '=' && i > j)
         {
-            if(equiv[i][j]=='=' && i>j)
-            {
-                set<char>temp;
-                temp.insert(states[i]);
-                temp.insert(states[j]);
-                newState.push_back(temp);
-            }
+            set<char> temp;
+            temp.insert(states[i]);
+            temp.insert(states[j]);
+            newState.push_back(temp);
+            checked[i]=true;
+            checked[j]=true;
         }
+        
     }
-    // Printing transitions to the new states
-cout << "\nTransitions to New States:\n";
-for (i = 0; i < numState; i++) {
-    for (j = 0; j < numAlpha; j++) {
-        for (int k = 0; k < newState.size(); k++) {
-            bool found = false;
-            for (int m = 0; m < numState; m++) {
-                if (newState[k].count(transit[i][j]) > 0) {
-                    found = true;
-                    cout << "State " << states[i] << " with alphabet " << alpha[j]
-                         << " goes to New State " << *newState[k].begin() << endl;
+}
+    cout << "\nTransitions to New States:\n";
+    char newtransit[newState.size()][numAlpha];
+    for (i = 0; i < newState.size(); i++)
+    {
+        for (j = 0; j < numAlpha; j++)
+        {
+            int temp=-1;
+            for (int k = 0; k < numState; k++)
+            {
+                if (states[k] == *newState[i].begin())
+                {
+                    temp = k;
                     break;
                 }
             }
-            if (found) break;
+            if(temp!=-1)
+            cout << "state " << *newState[i].begin() << " with " << alpha[j] << " : " << transit[temp][j] << endl;
         }
     }
-}
+    for(int i=0; i<numState; i++)
+    {
+        for(j=0; j<numAlpha; j++)
+        {
+            if(checked[i]==false)
+            cout<<"state "<<states[i]<<" with "<<alpha[j]<<" : "<<transit[i][j]<<endl;
+        }
+    }
     return 0;
 }
