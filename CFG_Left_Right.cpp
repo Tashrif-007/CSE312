@@ -110,12 +110,12 @@ int main()
     cout << endl;
     if (found)
     {
-        cout << "S->A1B" + path << endl;
+        cout<<"LeftMost Derivation: S->A1B"+path<<endl;
     }
     right_cfg(A,B,"A1B", s,path2);
     if (found2)
     {
-        cout << "S->A1B" + path2 << endl;
+        cout<<"RightMost Derivation: S->A1B"+path2<<endl;
     }
     return 0;
 }
