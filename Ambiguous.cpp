@@ -88,17 +88,19 @@ int main()
     }
     else
     cout<<"May not be ambiguous"<<endl;
-    path.clear();
 
-    cfg2(base, " ", s, path);
+    //RightMost derivation test for ambiguous grammar
+    // path.clear();
 
-    if(found2==2)
-    {
-        for(string x : paths2)
-        cout<<"Rightmost: S"+x<<endl;
-        cout<<"The grammar is ambiguous"<<endl;
-    }
-    else
-    cout<<"May not be ambiguous"<<endl;
+    // cfg2(base, " ", s, path);
+
+    // if(found2==2)
+    // {
+    //     for(string x : paths2)
+    //     cout<<"Rightmost: S"+x<<endl;
+    //     cout<<"The grammar is ambiguous"<<endl;
+    // }
+    // else
+    // cout<<"May not be ambiguous"<<endl;
     return 0;
 }
