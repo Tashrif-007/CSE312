@@ -1,9 +1,9 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int found = 0;
+int found = 0,found2=0;
 string path;
-vector<string>paths;
+vector<string>paths,paths2;
 
 void cfg(vector<string> &base, string output, string target, string currpath)
 {
@@ -39,6 +39,40 @@ void cfg(vector<string> &base, string output, string target, string currpath)
     }
 }
 
+void cfg2(vector<string> &base, string output, string target, string currpath)
+{
+    if (found2>=2)
+        return;
+
+    if (output.size()>target.size()+2)
+        return;
+
+    if (output.find('S')==string::npos && output!=" ")
+    {
+        if (output==target)
+        {
+            found2++;
+            path = currpath;
+            paths2.push_back(path);
+        }
+        return;
+    }
+
+    for (string x : base)
+    {
+        if (output.find('S')!=string::npos)
+        {
+            string temp = output.substr(0, output.find_last_of('S'));
+            temp += x;
+            temp += output.substr(output.find_last_of('S') + 1);
+            x = temp;
+        }
+        cfg2(base, x, target, currpath+"->"+x);
+        if (found2>=2)
+            return;
+    }
+}
+
 int main()
 {
     vector<string> base = {"aS", "aSbS", ""};
@@ -49,7 +83,19 @@ int main()
     if(found==2)
     {
         for(string x : paths)
-        cout<<"S"+x<<endl;
+        cout<<"Letfmost : S"+x<<endl;
+        cout<<"The grammar is ambiguous"<<endl;
+    }
+    else
+    cout<<"May not be ambiguous"<<endl;
+    path.clear();
+
+    cfg2(base, " ", s, path);
+
+    if(found2==2)
+    {
+        for(string x : paths2)
+        cout<<"Rightmost: S"+x<<endl;
         cout<<"The grammar is ambiguous"<<endl;
     }
     else
