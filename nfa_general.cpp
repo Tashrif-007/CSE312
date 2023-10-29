@@ -17,10 +17,8 @@ void nfaSim(char states[], char alpha[], char curr, char ending, string str, int
         {
             isAccepted = true;
             path = currentPath;
-            return;
         }
-        else
-            return;
+        return;
     }
 
     int i, j, k;
